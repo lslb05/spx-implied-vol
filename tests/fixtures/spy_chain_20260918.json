@@ -1,0 +1,345 @@
+{
+  "buscado_em": "2026-08-19T19:48:21.931767+00:00",
+  "vencimento": "2026-09-18",
+  "spot": 768.9349975585938,
+  "dividendos": [
+    {
+      "data": "2025-09-19",
+      "valor": 1.831
+    },
+    {
+      "data": "2025-12-19",
+      "valor": 1.993
+    },
+    {
+      "data": "2026-03-20",
+      "valor": 1.797
+    },
+    {
+      "data": "2026-06-18",
+      "valor": 1.904
+    }
+  ],
+  "contratos": [
+    {
+      "strike": 759.0,
+      "tipo": "call",
+      "bid": 19.43,
+      "ask": 19.68,
+      "lastPrice": 19.19,
+      "impliedVolatility": 0.1594017166137695
+    },
+    {
+      "strike": 760.0,
+      "tipo": "call",
+      "bid": 18.94,
+      "ask": 19.14,
+      "lastPrice": 18.67,
+      "impliedVolatility": 0.1600578379821777
+    },
+    {
+      "strike": 761.0,
+      "tipo": "call",
+      "bid": 17.92,
+      "ask": 18.13,
+      "lastPrice": 17.85,
+      "impliedVolatility": 0.15514455703735353
+    },
+    {
+      "strike": 762.0,
+      "tipo": "call",
+      "bid": 17.35,
+      "ask": 17.58,
+      "lastPrice": 17.21,
+      "impliedVolatility": 0.15544972976684573
+    },
+    {
+      "strike": 763.0,
+      "tipo": "call",
+      "bid": 16.54,
+      "ask": 16.74,
+      "lastPrice": 16.49,
+      "impliedVolatility": 0.1523217092895508
+    },
+    {
+      "strike": 764.0,
+      "tipo": "call",
+      "bid": 15.77,
+      "ask": 15.96,
+      "lastPrice": 15.78,
+      "impliedVolatility": 0.14975825836181644
+    },
+    {
+      "strike": 765.0,
+      "tipo": "call",
+      "bid": 15.31,
+      "ask": 15.4,
+      "lastPrice": 15.19,
+      "impliedVolatility": 0.14957515472412108
+    },
+    {
+      "strike": 766.0,
+      "tipo": "call",
+      "bid": 14.52,
+      "ask": 14.71,
+      "lastPrice": 15.25,
+      "impliedVolatility": 0.14780515289306645
+    },
+    {
+      "strike": 767.0,
+      "tipo": "call",
+      "bid": 13.68,
+      "ask": 13.87,
+      "lastPrice": 13.48,
+      "impliedVolatility": 0.14421937332153317
+    },
+    {
+      "strike": 768.0,
+      "tipo": "call",
+      "bid": 13.17,
+      "ask": 13.23,
+      "lastPrice": 13.15,
+      "impliedVolatility": 0.1427545442199707
+    },
+    {
+      "strike": 769.0,
+      "tipo": "call",
+      "bid": 12.62,
+      "ask": 12.67,
+      "lastPrice": 12.63,
+      "impliedVolatility": 0.14205264694213865
+    },
+    {
+      "strike": 770.0,
+      "tipo": "call",
+      "bid": 11.98,
+      "ask": 12.03,
+      "lastPrice": 11.87,
+      "impliedVolatility": 0.1403284210205078
+    },
+    {
+      "strike": 771.0,
+      "tipo": "call",
+      "bid": 11.28,
+      "ask": 11.33,
+      "lastPrice": 11.1,
+      "impliedVolatility": 0.13776497009277344
+    },
+    {
+      "strike": 772.0,
+      "tipo": "call",
+      "bid": 10.75,
+      "ask": 10.8,
+      "lastPrice": 10.59,
+      "impliedVolatility": 0.13697152099609378
+    },
+    {
+      "strike": 773.0,
+      "tipo": "call",
+      "bid": 10.06,
+      "ask": 10.11,
+      "lastPrice": 9.9,
+      "impliedVolatility": 0.13422496643066406
+    },
+    {
+      "strike": 774.0,
+      "tipo": "call",
+      "bid": 9.63,
+      "ask": 9.67,
+      "lastPrice": 9.32,
+      "impliedVolatility": 0.13413341461181644
+    },
+    {
+      "strike": 775.0,
+      "tipo": "call",
+      "bid": 9.06,
+      "ask": 9.11,
+      "lastPrice": 8.79,
+      "impliedVolatility": 0.13254651641845705
+    },
+    {
+      "strike": 776.0,
+      "tipo": "call",
+      "bid": 8.54,
+      "ask": 8.59,
+      "lastPrice": 8.35,
+      "impliedVolatility": 0.13123427368164062
+    },
+    {
+      "strike": 777.0,
+      "tipo": "call",
+      "bid": 8.05,
+      "ask": 8.1,
+      "lastPrice": 7.91,
+      "impliedVolatility": 0.13008987594604488
+    },
+    {
+      "strike": 778.0,
+      "tipo": "call",
+      "bid": 7.44,
+      "ask": 7.48,
+      "lastPrice": 7.38,
+      "impliedVolatility": 0.1272670281982422
+    },
+    {
+      "strike": 759.0,
+      "tipo": "put",
+      "bid": 6.72,
+      "ask": 6.74,
+      "lastPrice": 6.9,
+      "impliedVolatility": 0.12389486953735351
+    },
+    {
+      "strike": 760.0,
+      "tipo": "put",
+      "bid": 6.97,
+      "ask": 6.99,
+      "lastPrice": 6.98,
+      "impliedVolatility": 0.12244529907226565
+    },
+    {
+      "strike": 761.0,
+      "tipo": "put",
+      "bid": 7.24,
+      "ask": 7.26,
+      "lastPrice": 7.4,
+      "impliedVolatility": 0.12107202178955079
+    },
+    {
+      "strike": 762.0,
+      "tipo": "put",
+      "bid": 7.43,
+      "ask": 7.45,
+      "lastPrice": 7.64,
+      "impliedVolatility": 0.1186611572265625
+    },
+    {
+      "strike": 763.0,
+      "tipo": "put",
+      "bid": 7.73,
+      "ask": 7.76,
+      "lastPrice": 7.88,
+      "impliedVolatility": 0.1175015008544922
+    },
+    {
+      "strike": 764.0,
+      "tipo": "put",
+      "bid": 8.11,
+      "ask": 8.14,
+      "lastPrice": 8.31,
+      "impliedVolatility": 0.11698270721435547
+    },
+    {
+      "strike": 765.0,
+      "tipo": "put",
+      "bid": 8.33,
+      "ask": 8.36,
+      "lastPrice": 8.43,
+      "impliedVolatility": 0.11451080810546876
+    },
+    {
+      "strike": 766.0,
+      "tipo": "put",
+      "bid": 8.78,
+      "ask": 8.81,
+      "lastPrice": 8.83,
+      "impliedVolatility": 0.11448029083251954
+    },
+    {
+      "strike": 767.0,
+      "tipo": "put",
+      "bid": 9.12,
+      "ask": 9.14,
+      "lastPrice": 9.16,
+      "impliedVolatility": 0.11290865127563476
+    },
+    {
+      "strike": 768.0,
+      "tipo": "put",
+      "bid": 9.46,
+      "ask": 9.49,
+      "lastPrice": 9.47,
+      "impliedVolatility": 0.11141330490112303
+    },
+    {
+      "strike": 769.0,
+      "tipo": "put",
+      "bid": 9.81,
+      "ask": 9.84,
+      "lastPrice": 9.85,
+      "impliedVolatility": 0.10975011352539063
+    },
+    {
+      "strike": 770.0,
+      "tipo": "put",
+      "bid": 10.13,
+      "ask": 10.16,
+      "lastPrice": 10.29,
+      "impliedVolatility": 0.10755286987304688
+    },
+    {
+      "strike": 771.0,
+      "tipo": "put",
+      "bid": 10.66,
+      "ask": 10.69,
+      "lastPrice": 10.83,
+      "impliedVolatility": 0.10752235260009765
+    },
+    {
+      "strike": 772.0,
+      "tipo": "put",
+      "bid": 11.02,
+      "ask": 11.06,
+      "lastPrice": 11.05,
+      "impliedVolatility": 0.10552347122192382
+    },
+    {
+      "strike": 773.0,
+      "tipo": "put",
+      "bid": 11.43,
+      "ask": 11.46,
+      "lastPrice": 11.56,
+      "impliedVolatility": 0.10364665893554686
+    },
+    {
+      "strike": 774.0,
+      "tipo": "put",
+      "bid": 12.0,
+      "ask": 12.03,
+      "lastPrice": 12.01,
+      "impliedVolatility": 0.10349407257080076
+    },
+    {
+      "strike": 775.0,
+      "tipo": "put",
+      "bid": 12.42,
+      "ask": 12.55,
+      "lastPrice": 12.5,
+      "impliedVolatility": 0.10257855438232422
+    },
+    {
+      "strike": 776.0,
+      "tipo": "put",
+      "bid": 12.93,
+      "ask": 13.05,
+      "lastPrice": 13.1,
+      "impliedVolatility": 0.10120527709960936
+    },
+    {
+      "strike": 777.0,
+      "tipo": "put",
+      "bid": 13.25,
+      "ask": 13.42,
+      "lastPrice": 13.65,
+      "impliedVolatility": 0.09804673934936525
+    },
+    {
+      "strike": 778.0,
+      "tipo": "put",
+      "bid": 13.91,
+      "ask": 14.08,
+      "lastPrice": 14.49,
+      "impliedVolatility": 0.09809251525878906
+    }
+  ]
+}
