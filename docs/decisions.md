@@ -1,64 +1,65 @@
-# Decisões
+# Decisions
 
-Registre somente decisões que alterem custo de mudança futuro.
+Record only decisions that change the future cost of change.
 
-## Modelo
+## Template
 
-### AAAA-MM-DD — Título
+### YYYY-MM-DD — Title
 
-- **Contexto:** qual restrição ou problema exigiu decisão.
-- **Decisão:** o caminho escolhido.
-- **Alternativas:** opções relevantes descartadas.
-- **Consequências:** ganhos, custos e gatilho para revisar.
+- **Context:** what constraint or problem required a decision.
+- **Decision:** the path chosen.
+- **Alternatives:** relevant options discarded.
+- **Consequences:** gains, costs and the trigger to revisit.
 
-### 2026-08-18 — Manter `CLAUDE.md` e `AGENTS.md` no repositório público
+### 2026-08-18 — Keep `CLAUDE.md` and `AGENTS.md` in the public repository
 
-- **Contexto:** os dois arquivos declaram que o repositório é construído com
-  apoio de agentes. A alternativa era ignorá-los no git para que o repositório
-  público não revelasse o fluxo de trabalho.
-- **Decisão:** manter os dois versionados e públicos.
-- **Alternativas:** ignorar `AGENTS.md` no `.gitignore`; mantê-lo apenas local.
-  Ambas quebram a delegação ao Codex, que lê esse arquivo do repositório — o
-  custo é funcional e imediato, o ganho é cosmético.
-- **Consequências:** o repositório declara o método em vez de escondê-lo, o que
-  também é verificável por quem lê. Rever se algum destino exigir o contrário.
+- **Context:** both files declare that the repository is built with agent
+  support. The alternative was ignoring them in git so the public
+  repository wouldn't reveal the workflow.
+- **Decision:** keep both versioned and public.
+- **Alternatives:** ignore `AGENTS.md` in `.gitignore`; keep it local only.
+  Both break delegation to Codex, which reads this file from the
+  repository — the cost is functional and immediate, the gain is cosmetic.
+- **Consequences:** the repository states the method instead of hiding it,
+  which is also verifiable by whoever reads it. Revisit if some destination
+  ever requires the opposite.
 
-### 2026-08-19 — SPY como proxy do SPX, e Black-Scholes europeu sobre opção americana
+### 2026-08-19 — SPY as SPX proxy, and European Black-Scholes over an American option
 
-- **Contexto:** o índice SPX não expõe chain de opções via `yfinance`; os
-  únicos jeitos gratuitos de ter dado de opção de índice em quantidade são
-  proxies via ETF (SPY) ou dado pago (CBOE DataShop). SPY é opção americana;
-  o modelo de precificação mais simples de implementar sem dependência nova é
-  Black-Scholes-Merton, que assume europeia.
-- **Decisão:** usar a chain da SPY e aceitar o viés americano-vs-europeu,
-  medindo-o em teste (`tests/test_skew.py`) contra a IV que a própria fonte
-  publica, em vez de escondê-lo ou tentar corrigi-lo com um modelo binomial
-  neste primeiro corte.
-- **Alternativas:** modelo binomial (Cox-Ross-Rubinstein) para precificar
-  exercício antecipado corretamente — mais fiel, mas mais código e mais
-  parâmetro pra validar num corte que já tem risco técnico suficiente
-  (inversão numérica). CBOE DataShop para XSP europeu — pago, fora da regra
-  de fonte pública do portfólio.
-- **Consequências:** o viés fica pequeno e documentado para o horizonte
-  testado (~30 dias, diferença média abaixo de 0,015 vol point). Se um corte
-  futuro precisar de opção curta (poucos dias) ou LEAP longo, o viés cresce e
-  a decisão deve ser revisitada — não assuma que continua pequeno fora da
-  faixa testada.
+- **Context:** the SPX index doesn't expose an option chain via `yfinance`;
+  the only free ways to get index option data at scale are ETF proxies
+  (SPY) or paid data (CBOE DataShop). SPY is American; the simplest pricing
+  model to implement without a new dependency is Black-Scholes-Merton,
+  which assumes European.
+- **Decision:** use SPY's chain and accept the American-vs-European bias,
+  measuring it in a test (`tests/test_skew.py`) against the IV the source
+  itself publishes, instead of hiding it or trying to correct it with a
+  binomial model in this first cut.
+- **Alternatives:** a binomial model (Cox-Ross-Rubinstein) to correctly
+  price early exercise — more faithful, but more code and more parameters
+  to validate in a cut that already carries enough technical risk
+  (numerical inversion). CBOE DataShop for European XSP — paid, outside the
+  portfolio's public-source rule.
+- **Consequences:** the bias stays small and documented for the tested
+  horizon (~30 days, average difference below 0.015 vol point). If a future
+  cut needs a short-dated option (a few days) or a long LEAP, the bias
+  grows and the decision should be revisited — don't assume it stays small
+  outside the tested range.
 
-### 2026-08-19 — Newton-Raphson com bisseção como salva-vidas, sem `scipy`
+### 2026-08-19 — Newton-Raphson with bisection as a fallback, no `scipy`
 
-- **Contexto:** inverter Black-Scholes para achar a IV não tem forma fechada.
-  Newton-Raphson puro é rápido mas diverge quando a vega é quase zero (strike
-  bem fora do dinheiro) — comum numa chain real, como a fixture de teste
-  mostrou nos primeiros contratos experimentados.
-- **Decisão:** Newton-Raphson como caminho rápido; se ele sair da faixa
-  `[0.0001, 5.0]` ou a vega ficar pequena demais, cai pra bisseção na mesma
-  faixa, que sempre converge se o preço estiver na banda alcançável por
-  alguma vol positiva. Fora dessa banda, devolve `None` em vez de inventar
-  número.
-- **Alternativas:** `scipy.optimize.brentq` — mais testado, mas traz `scipy`
-  inteiro (dependência pesada) só por uma função de root-finding que dá pra
-  implementar em ~15 linhas com a garantia que este projeto precisa.
-- **Consequências:** sem dependência nova além do que já era necessário;
-  custo é manter esse solver testado (`tests/test_black_scholes.py` cobre
-  round-trip preço→IV para vols de 5% a 80%, chamada e put).
+- **Context:** inverting Black-Scholes to find IV has no closed form. Plain
+  Newton-Raphson is fast but diverges when vega is near zero (a strike well
+  out of the money) — common in a real chain, as the test fixture showed on
+  the first contracts tried.
+- **Decision:** Newton-Raphson as the fast path; if it leaves the
+  `[0.0001, 5.0]` range or vega gets too small, it falls back to bisection
+  on the same range, which always converges if the price is within the band
+  reachable by some positive vol. Outside that band, it returns `None`
+  instead of inventing a number.
+- **Alternatives:** `scipy.optimize.brentq` — more battle-tested, but pulls
+  in all of `scipy` (a heavy dependency) just for one root-finding function
+  that's ~15 lines to implement with the guarantee this project needs.
+- **Consequences:** no new dependency beyond what was already needed; the
+  cost is maintaining this solver's tests (`tests/test_black_scholes.py`
+  covers the price→IV round trip for vols from 5% to 80%, call and put).

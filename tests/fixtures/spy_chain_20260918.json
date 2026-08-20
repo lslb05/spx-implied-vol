@@ -1,29 +1,29 @@
 {
-  "buscado_em": "2026-08-19T19:48:21.931767+00:00",
-  "vencimento": "2026-09-18",
+  "fetched_at": "2026-08-19T19:48:21.931767+00:00",
+  "expiration": "2026-09-18",
   "spot": 768.9349975585938,
-  "dividendos": [
+  "dividends": [
     {
-      "data": "2025-09-19",
-      "valor": 1.831
+      "date": "2025-09-19",
+      "value": 1.831
     },
     {
-      "data": "2025-12-19",
-      "valor": 1.993
+      "date": "2025-12-19",
+      "value": 1.993
     },
     {
-      "data": "2026-03-20",
-      "valor": 1.797
+      "date": "2026-03-20",
+      "value": 1.797
     },
     {
-      "data": "2026-06-18",
-      "valor": 1.904
+      "date": "2026-06-18",
+      "value": 1.904
     }
   ],
-  "contratos": [
+  "contracts": [
     {
       "strike": 759.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 19.43,
       "ask": 19.68,
       "lastPrice": 19.19,
@@ -31,7 +31,7 @@
     },
     {
       "strike": 760.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 18.94,
       "ask": 19.14,
       "lastPrice": 18.67,
@@ -39,7 +39,7 @@
     },
     {
       "strike": 761.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 17.92,
       "ask": 18.13,
       "lastPrice": 17.85,
@@ -47,7 +47,7 @@
     },
     {
       "strike": 762.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 17.35,
       "ask": 17.58,
       "lastPrice": 17.21,
@@ -55,7 +55,7 @@
     },
     {
       "strike": 763.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 16.54,
       "ask": 16.74,
       "lastPrice": 16.49,
@@ -63,7 +63,7 @@
     },
     {
       "strike": 764.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 15.77,
       "ask": 15.96,
       "lastPrice": 15.78,
@@ -71,7 +71,7 @@
     },
     {
       "strike": 765.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 15.31,
       "ask": 15.4,
       "lastPrice": 15.19,
@@ -79,7 +79,7 @@
     },
     {
       "strike": 766.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 14.52,
       "ask": 14.71,
       "lastPrice": 15.25,
@@ -87,7 +87,7 @@
     },
     {
       "strike": 767.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 13.68,
       "ask": 13.87,
       "lastPrice": 13.48,
@@ -95,7 +95,7 @@
     },
     {
       "strike": 768.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 13.17,
       "ask": 13.23,
       "lastPrice": 13.15,
@@ -103,7 +103,7 @@
     },
     {
       "strike": 769.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 12.62,
       "ask": 12.67,
       "lastPrice": 12.63,
@@ -111,7 +111,7 @@
     },
     {
       "strike": 770.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 11.98,
       "ask": 12.03,
       "lastPrice": 11.87,
@@ -119,7 +119,7 @@
     },
     {
       "strike": 771.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 11.28,
       "ask": 11.33,
       "lastPrice": 11.1,
@@ -127,7 +127,7 @@
     },
     {
       "strike": 772.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 10.75,
       "ask": 10.8,
       "lastPrice": 10.59,
@@ -135,7 +135,7 @@
     },
     {
       "strike": 773.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 10.06,
       "ask": 10.11,
       "lastPrice": 9.9,
@@ -143,7 +143,7 @@
     },
     {
       "strike": 774.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 9.63,
       "ask": 9.67,
       "lastPrice": 9.32,
@@ -151,7 +151,7 @@
     },
     {
       "strike": 775.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 9.06,
       "ask": 9.11,
       "lastPrice": 8.79,
@@ -159,7 +159,7 @@
     },
     {
       "strike": 776.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 8.54,
       "ask": 8.59,
       "lastPrice": 8.35,
@@ -167,7 +167,7 @@
     },
     {
       "strike": 777.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 8.05,
       "ask": 8.1,
       "lastPrice": 7.91,
@@ -175,7 +175,7 @@
     },
     {
       "strike": 778.0,
-      "tipo": "call",
+      "type": "call",
       "bid": 7.44,
       "ask": 7.48,
       "lastPrice": 7.38,
@@ -183,7 +183,7 @@
     },
     {
       "strike": 759.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 6.72,
       "ask": 6.74,
       "lastPrice": 6.9,
@@ -191,7 +191,7 @@
     },
     {
       "strike": 760.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 6.97,
       "ask": 6.99,
       "lastPrice": 6.98,
@@ -199,7 +199,7 @@
     },
     {
       "strike": 761.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 7.24,
       "ask": 7.26,
       "lastPrice": 7.4,
@@ -207,7 +207,7 @@
     },
     {
       "strike": 762.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 7.43,
       "ask": 7.45,
       "lastPrice": 7.64,
@@ -215,7 +215,7 @@
     },
     {
       "strike": 763.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 7.73,
       "ask": 7.76,
       "lastPrice": 7.88,
@@ -223,7 +223,7 @@
     },
     {
       "strike": 764.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 8.11,
       "ask": 8.14,
       "lastPrice": 8.31,
@@ -231,7 +231,7 @@
     },
     {
       "strike": 765.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 8.33,
       "ask": 8.36,
       "lastPrice": 8.43,
@@ -239,7 +239,7 @@
     },
     {
       "strike": 766.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 8.78,
       "ask": 8.81,
       "lastPrice": 8.83,
@@ -247,7 +247,7 @@
     },
     {
       "strike": 767.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 9.12,
       "ask": 9.14,
       "lastPrice": 9.16,
@@ -255,7 +255,7 @@
     },
     {
       "strike": 768.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 9.46,
       "ask": 9.49,
       "lastPrice": 9.47,
@@ -263,7 +263,7 @@
     },
     {
       "strike": 769.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 9.81,
       "ask": 9.84,
       "lastPrice": 9.85,
@@ -271,7 +271,7 @@
     },
     {
       "strike": 770.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 10.13,
       "ask": 10.16,
       "lastPrice": 10.29,
@@ -279,7 +279,7 @@
     },
     {
       "strike": 771.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 10.66,
       "ask": 10.69,
       "lastPrice": 10.83,
@@ -287,7 +287,7 @@
     },
     {
       "strike": 772.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 11.02,
       "ask": 11.06,
       "lastPrice": 11.05,
@@ -295,7 +295,7 @@
     },
     {
       "strike": 773.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 11.43,
       "ask": 11.46,
       "lastPrice": 11.56,
@@ -303,7 +303,7 @@
     },
     {
       "strike": 774.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 12.0,
       "ask": 12.03,
       "lastPrice": 12.01,
@@ -311,7 +311,7 @@
     },
     {
       "strike": 775.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 12.42,
       "ask": 12.55,
       "lastPrice": 12.5,
@@ -319,7 +319,7 @@
     },
     {
       "strike": 776.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 12.93,
       "ask": 13.05,
       "lastPrice": 13.1,
@@ -327,7 +327,7 @@
     },
     {
       "strike": 777.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 13.25,
       "ask": 13.42,
       "lastPrice": 13.65,
@@ -335,7 +335,7 @@
     },
     {
       "strike": 778.0,
-      "tipo": "put",
+      "type": "put",
       "bid": 13.91,
       "ask": 14.08,
       "lastPrice": 14.49,

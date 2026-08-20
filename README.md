@@ -1,22 +1,21 @@
-# vol-implicita-spx
+# spx-implied-vol
 
-Superfície de vol implícita e skew da SPY (proxy líquido do SPX), calculada
-por inversão numérica de Black-Scholes — sem depender de nenhuma biblioteca
-de precificação pronta.
+SPY implied vol surface and skew (liquid SPX proxy), computed by numerical
+Black-Scholes inversion — no ready-made pricing library involved.
 
-## O problema
+## The problem
 
-Toda corretora e todo terminal já mostra a vol implícita de uma opção. O que
-não aparece é a conta: inverter Black-Scholes para achar a vol que reproduz
-o preço de mercado exige um solver numérico (o preço não é invertível em
-forma fechada), e fazer essa conta certo — com a taxa livre de risco e o
-dividendo certos — é o que este repositório prova.
+Every broker and every terminal already shows an option's implied vol. What
+doesn't show is the math: inverting Black-Scholes to find the vol that
+reproduces the market price requires a numerical solver (the price has no
+closed-form inverse), and getting that math right — with the correct
+risk-free rate and dividend — is what this repository proves.
 
-## Resultado
+## Result
 
 ```console
-$ uv run python -m vol_implicita_spx curva --vencimento 2026-09-18
-strike,tipo,iv,iv_referencia,delta,vega
+$ uv run python -m spx_implied_vol curve --expiration 2026-09-18
+strike,type,iv,reference_iv,delta,vega
 759.0,call,0.141798,0.159402,0.662783,80.404433
 760.0,call,0.143328,0.160058,0.649517,81.584290
 761.0,call,0.138608,0.155145,0.641586,82.239416
@@ -26,74 +25,76 @@ strike,tipo,iv,iv_referencia,delta,vega
 ...
 ```
 
-`iv_referencia` é o que a própria Yahoo/CBOE publicam na chain — um gabarito
-gratuito para validar a conta sem precisar de fixture fabricada à mão. A
-transcrição acima foi calculada a partir da fixture congelada em
-`tests/fixtures/spy_chain_20260918.json` (chain real da SPY, capturada em
-2026-08-19), com taxa livre de risco fixa de 5% só para o exemplo — a coleta
-ao vivo usa a chain do momento da chamada e a taxa `DGS3MO` do Postgres.
+`reference_iv` is what Yahoo/CBOE themselves publish in the chain — a free
+ground truth to validate the math without a hand-fabricated fixture. The
+transcript above was computed from the fixture frozen in
+`tests/fixtures/spy_chain_20260918.json` (a real SPY chain, captured
+2026-08-19), with a fixed 5% risk-free rate for the example only — live
+collection uses the chain at call time and the `DGS3MO` rate from Postgres.
 
-## Problema e escopo
+## Problem and scope
 
-- **Usuário:** eu, e quem revisa o portfólio avaliando para pesquisa
-  quantitativa.
-- **Decisão:** dá pra ler skew e superfície de vol da SPY sem depender de
-  terminal pago, e verificar a própria conta contra a IV que a fonte publica.
-- **Entrada:** `yfinance`, chain de opções da SPY. Taxa livre de risco: FRED
-  `DGS3MO`, lida do Postgres do
-  [`dados-mercado-publico`](../dados-mercado-publico) via
-  `DADOS_MERCADO_PUBLICO_POSTGRES_DSN` — a mesma variável que aquele projeto
-  usa, então um `.env` configura os dois.
-- **Fora de escopo:** sinal de trading, backtest histórico (`yfinance` só
-  expõe a chain do dia — sem histórico, não dá pra reconstruir superfícies
-  passadas ainda), superfície paramétrica (SVI/SABR), grego de segunda ordem.
+- **User:** me, and whoever reviews the portfolio evaluating for
+  quantitative research.
+- **Decision:** SPY's skew and vol surface can be read without a paid
+  terminal, and the math can be checked against the IV the source itself
+  publishes.
+- **Input:** `yfinance`, SPY's option chain. Risk-free rate: FRED `DGS3MO`,
+  read from Postgres via
+  [`dados-mercado-publico`](../dados-mercado-publico) through
+  `DADOS_MERCADO_PUBLICO_POSTGRES_DSN` — the same variable that project
+  uses, so one `.env` configures both.
+- **Out of scope:** trading signals, historical backtesting (`yfinance`
+  only exposes today's chain — without history, past surfaces can't be
+  reconstructed yet), a parametric surface (SVI/SABR), second-order greeks.
 
-## Arquitetura
+## Architecture
 
 ```
 yfinance (SPY)                    Postgres (dados-mercado-publico)
-    │  chain, spot, dividendos         │  DGS3MO via series_vintage
+    │  chain, spot, dividends          │  DGS3MO via series_vintage
     ▼                                  ▼
-fontes/spy.py                    taxa_livre_risco.py
+sources/spy.py                   risk_free_rate.py
     │                                  │
     └──────────────┬───────────────────┘
                     ▼
-              skew.py            para cada contrato: inverte
-                    │             black_scholes.vol_implicita
+              skew.py            for each contract: inverts
+                    │             black_scholes.implied_vol
                     ▼
-                 cli.py           curva de skew em CSV
+                 cli.py           skew curve as CSV
 ```
 
-`black_scholes.py` não depende de nada além da biblioteca padrão —
-`math.erf` já dá a CDF normal sem trazer `scipy`/`numpy` só para isso.
+`black_scholes.py` depends on nothing beyond the standard library —
+`math.erf` already gives the normal CDF without pulling in `scipy`/`numpy`
+just for that.
 
-Duas decisões que valem explicação:
+Two decisions worth explaining:
 
-**Newton-Raphson com bisseção como salva-vidas.** Newton converge rápido perto
-do preço, mas diverge quando a vega é quase zero (strike bem fora do dinheiro)
-ou quando o passo joga a vol pra fora de uma faixa razoável. Nesse caso o
-solver cai pra bisseção em `[0.0001, 5.0]`, que é lenta mas sempre converge se
-o preço estiver dentro da banda alcançável por alguma vol positiva. Fora dessa
-banda (preço de mercado abaixo do intrínseco, cotação sem negócio real), a
-função devolve `None` em vez de inventar um número.
+**Newton-Raphson with bisection as a fallback.** Newton converges fast near
+the price, but diverges when vega is near zero (a strike well out of the
+money) or when a step pushes vol outside a reasonable range. In that case
+the solver falls back to bisection on `[0.0001, 5.0]`, which is slow but
+always converges if the price is within the band reachable by some positive
+vol. Outside that band (market price below intrinsic, a quote with no real
+trade), the function returns `None` instead of inventing a number.
 
-**SPY é opção americana; a conta aqui é europeia.** Black-Scholes-Merton
-assume exercício só no vencimento. SPY permite exercício antecipado, e paga
-dividendo — o que torna o call americano ligeiramente mais valioso que o
-europeu equivalente perto de uma data-ex. Contra a fixture real usada nos
-testes (vencimento de ~30 dias), a IV calculada aqui fica em média a menos de
-0,015 vol point da IV que a Yahoo publica, com máximo abaixo de 0,03 — o viés
-existe, é pequeno neste horizonte, e fica medido pelo teste em vez de
-escondido.
+**SPY is an American option; the math here is European.**
+Black-Scholes-Merton assumes exercise only at expiration. SPY allows early
+exercise and pays a dividend — which makes the American call slightly more
+valuable than the European equivalent near an ex-date. Against the real
+fixture used in the tests (~30-day expiration), the IV computed here
+averages less than 0.015 vol point away from the IV Yahoo publishes, with a
+maximum below 0.03 — the bias exists, is small at this horizon, and is
+measured by the test instead of hidden.
 
-## Executar localmente
+## Run locally
 
-Requisitos: Python 3.12, `uv`, Docker (para o Postgres efêmero dos testes),
-e o [`dados-mercado-publico`](../dados-mercado-publico) rodando com a série
-`DGS3MO` ingerida:
+Requirements: Python 3.12, `uv`, Docker (for the ephemeral test Postgres),
+and [`dados-mercado-publico`](../dados-mercado-publico) running with the
+`DGS3MO` series ingested:
 
 ```bash
-# no dados-mercado-publico:
+# in dados-mercado-publico:
 docker compose up -d
 uv run python -m dados_mercado_publico ingerir --fonte fred --serie DGS3MO
 ```
@@ -101,49 +102,50 @@ uv run python -m dados_mercado_publico ingerir --fonte fred --serie DGS3MO
 ```bash
 uv sync
 cp .env.example .env
-uv run python -m vol_implicita_spx curva --vencimento 2026-09-18
+uv run python -m spx_implied_vol curve --expiration 2026-09-18
 ```
 
-Sem a série `DGS3MO` ingerida no projeto vizinho, o comando orienta e sai com
-código 2 em vez de inventar uma taxa.
+Without the `DGS3MO` series ingested in the neighboring project, the command
+explains why and exits with code 2 instead of inventing a rate.
 
-## Qualidade
+## Quality
 
 ```bash
 uv run python scripts/check.py
 ```
 
-O check executa formatação, lint, tipos e testes com cobertura. É o mesmo
-comando que o CI roda, em Windows, Linux e macOS.
+The check runs format, lint, types and tests with coverage. It's the same
+command CI runs, on Windows, Linux and macOS.
 
-Para aplicar formatação e correções automáticas de lint:
+To apply formatting and automatic lint fixes:
 
 ```bash
 uv run python scripts/format.py
 ```
 
-## Estrutura
+## Structure
 
 ```text
-src/vol_implicita_spx/
-    black_scholes.py   precificação e inversão numérica — sem dependência de rede
-    fontes/spy.py       adaptador yfinance, testável com um ticker falso
-    taxa_livre_risco.py leitura da interface pública do dados-mercado-publico
-    skew.py             combina os três numa curva por vencimento
-    cli.py               coordenação
-tests/fixtures/          chain real da SPY congelada, usada como gabarito
+src/spx_implied_vol/
+    black_scholes.py    pricing and numerical inversion — no network dependency
+    sources/spy.py       yfinance adapter, testable with a fake ticker
+    risk_free_rate.py    reads the dados-mercado-publico public interface
+    skew.py               combines the three into a per-expiration curve
+    cli.py                 coordination
+tests/fixtures/           real SPY chain frozen as ground truth
 ```
 
-## Limitações
+## Limitations
 
-- Sem histórico de chain: `yfinance` só dá o dia corrente, então não dá pra
-  reconstruir uma superfície passada nem fazer backtest ainda. Point-in-time
-  real exigiria capturar snapshots diários — próximo corte, se fizer sentido.
-- Dividendo é um yield contínuo aproximado (soma dos pagamentos dos últimos
-  365 dias / spot), não o calendário real de datas-ex.
-- Sem superfície paramétrica (SVI/SABR): a curva é ponto a ponto, não
-  suavizada nem extrapolada entre strikes.
+- No chain history: `yfinance` only gives the current day, so a past
+  surface can't be reconstructed and there's no backtest yet. Real
+  point-in-time would require capturing daily snapshots — a possible next
+  cut.
+- Dividend is an approximated continuous yield (sum of the last 365 days of
+  payments / spot), not the real ex-date calendar.
+- No parametric surface (SVI/SABR): the curve is point by point, neither
+  smoothed nor extrapolated between strikes.
 
-## Licença
+## License
 
-MIT. Dados de terceiros mantêm suas próprias licenças e termos de uso.
+MIT. Third-party data keeps its own license and terms of use.

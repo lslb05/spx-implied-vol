@@ -2,8 +2,8 @@ import json
 from datetime import date
 from pathlib import Path
 
-from vol_implicita_spx.fontes.spy import Contrato
-from vol_implicita_spx.skew import calcular_curva
+from spx_implied_vol.skew import compute_curve
+from spx_implied_vol.sources.spy import Contract
 
 _FIXTURE = json.loads(
     (Path(__file__).parent / "fixtures" / "spy_chain_20260918.json").read_text(
@@ -14,57 +14,58 @@ _FIXTURE = json.loads(
 
 def _dividend_yield() -> float:
     spot: float = _FIXTURE["spot"]
-    total: float = sum(d["valor"] for d in _FIXTURE["dividendos"])
+    total: float = sum(d["value"] for d in _FIXTURE["dividends"])
     return total / spot
 
 
-def test_iv_calculada_bate_com_a_iv_que_a_yahoo_ja_publica() -> None:
-    """Gabarito é a própria fonte: o preço vem da chain real, congelada em
-    fixture, e a IV que calculamos por Black-Scholes-Merton europeu deve ficar
-    perto da IV que a Yahoo/CBOE publicam usando o modelo delas (que trata a
-    opção americana). A diferença remanescente é o viés documentado no README.
+def test_computed_iv_matches_the_iv_yahoo_already_publishes() -> None:
+    """The ground truth is the source itself: the price comes from a real
+    chain, frozen in a fixture, and the IV we compute via European
+    Black-Scholes-Merton should land close to the IV Yahoo/CBOE publish using
+    their model (which handles the American option). The remaining
+    difference is the bias documented in the README.
     """
-    contratos = [
-        Contrato(
+    contracts = [
+        Contract(
             strike=c["strike"],
-            tipo=c["tipo"],
-            preco_mercado=(c["bid"] + c["ask"]) / 2,
-            iv_referencia=c["impliedVolatility"],
+            type=c["type"],
+            market_price=(c["bid"] + c["ask"]) / 2,
+            reference_iv=c["impliedVolatility"],
         )
-        for c in _FIXTURE["contratos"]
+        for c in _FIXTURE["contracts"]
     ]
 
-    curva = calcular_curva(
-        contratos,
+    curve = compute_curve(
+        contracts,
         spot=_FIXTURE["spot"],
-        vencimento=date.fromisoformat(_FIXTURE["vencimento"]),
-        hoje=date.fromisoformat(_FIXTURE["buscado_em"][:10]),
-        taxa=0.05,
-        dividendo=_dividend_yield(),
+        expiration=date.fromisoformat(_FIXTURE["expiration"]),
+        today=date.fromisoformat(_FIXTURE["fetched_at"][:10]),
+        rate=0.05,
+        dividend=_dividend_yield(),
     )
 
-    diferenca = (curva["iv"] - curva["iv_referencia"]).abs()
-    maximo = diferenca.max()
-    media = diferenca.mean()
-    # Tolerância folgada o suficiente pro viés americano vs. europeu e pra
-    # aproximação de dividendo contínuo, apertada o suficiente pra pegar erro
-    # de conta real (ex.: trocar taxa por dividendo, sinal errado no d1/d2).
-    assert maximo is not None and float(maximo) < 0.03  # type: ignore[arg-type]
-    assert media is not None and float(media) < 0.015  # type: ignore[arg-type]
+    difference = (curve["iv"] - curve["reference_iv"]).abs()
+    maximum = difference.max()
+    average = difference.mean()
+    # Loose enough for the American-vs-European bias and the continuous
+    # dividend approximation, tight enough to catch a real accounting error
+    # (e.g. swapping rate for dividend, a wrong sign in d1/d2).
+    assert maximum is not None and float(maximum) < 0.03  # type: ignore[arg-type]
+    assert average is not None and float(average) < 0.015  # type: ignore[arg-type]
 
 
-def test_contrato_sem_preco_valido_fica_com_iv_nula() -> None:
-    contratos = [
-        Contrato(strike=770.0, tipo="call", preco_mercado=0.0, iv_referencia=None)
+def test_contract_with_no_valid_price_has_null_iv() -> None:
+    contracts = [
+        Contract(strike=770.0, type="call", market_price=0.0, reference_iv=None)
     ]
 
-    curva = calcular_curva(
-        contratos,
+    curve = compute_curve(
+        contracts,
         spot=769.25,
-        vencimento=date(2026, 8, 21),
-        hoje=date(2026, 8, 19),
-        taxa=0.05,
-        dividendo=0.01,
+        expiration=date(2026, 8, 21),
+        today=date(2026, 8, 19),
+        rate=0.05,
+        dividend=0.01,
     )
 
-    assert curva["iv"].to_list() == [None]
+    assert curve["iv"].to_list() == [None]

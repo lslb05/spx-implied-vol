@@ -4,7 +4,7 @@ import pandas as pd
 import psycopg
 import pytest
 
-from vol_implicita_spx.cli import main
+from spx_implied_vol.cli import main
 
 
 @dataclass
@@ -13,11 +13,11 @@ class _Chain:
     puts: pd.DataFrame
 
 
-class _TickerFalso:
+class _FakeTicker:
     options: tuple[str, ...] = ("2026-08-21",)
 
-    def __init__(self, com_contratos: bool) -> None:
-        linhas = (
+    def __init__(self, with_contracts: bool) -> None:
+        rows = (
             [
                 {
                     "strike": 770.0,
@@ -27,13 +27,13 @@ class _TickerFalso:
                     "impliedVolatility": 0.1,
                 }
             ]
-            if com_contratos
+            if with_contracts
             else []
         )
-        self._chain = _Chain(pd.DataFrame(linhas), pd.DataFrame([]))
+        self._chain = _Chain(pd.DataFrame(rows), pd.DataFrame([]))
         self.dividends = pd.Series(dtype=float)
 
-    def option_chain(self, vencimento: str) -> _Chain:
+    def option_chain(self, expiration: str) -> _Chain:
         return self._chain
 
     def history(self, period: str) -> pd.DataFrame:
@@ -41,12 +41,12 @@ class _TickerFalso:
 
 
 @pytest.fixture(autouse=True)
-def dsn_no_ambiente(monkeypatch: pytest.MonkeyPatch, dsn: str) -> None:
+def dsn_in_environment(monkeypatch: pytest.MonkeyPatch, dsn: str) -> None:
     monkeypatch.setenv("DADOS_MERCADO_PUBLICO_POSTGRES_DSN", dsn)
 
 
-def _semear_taxa(conexao: psycopg.Connection) -> None:
-    conexao.execute(
+def _seed_rate(connection: psycopg.Connection) -> None:
+    connection.execute(
         """
         INSERT INTO series_vintage
             (fonte, serie, data_evento, data_publicacao, vigente_ate, valor,
@@ -57,32 +57,30 @@ def _semear_taxa(conexao: psycopg.Connection) -> None:
     )
 
 
-def test_sem_taxa_ingerida_orienta_e_sai_com_codigo_dois() -> None:
-    assert main(["curva", "--vencimento", "2026-08-21"]) == 2
+def test_missing_rate_guides_and_exits_with_code_two() -> None:
+    assert main(["curve", "--expiration", "2026-08-21"]) == 2
 
 
-def test_curva_imprime_csv_com_a_iv_calculada(
-    conexao: psycopg.Connection,
+def test_curve_prints_csv_with_the_computed_iv(
+    connection: psycopg.Connection,
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    _semear_taxa(conexao)
-    monkeypatch.setattr("vol_implicita_spx.cli.yf.Ticker", lambda _: _TickerFalso(True))
+    _seed_rate(connection)
+    monkeypatch.setattr("spx_implied_vol.cli.yf.Ticker", lambda _: _FakeTicker(True))
 
-    codigo = main(["curva", "--vencimento", "2026-08-21"])
+    code = main(["curve", "--expiration", "2026-08-21"])
 
-    assert codigo == 0
-    saida = capsys.readouterr().out
-    assert "strike" in saida
-    assert "770" in saida
+    assert code == 0
+    output = capsys.readouterr().out
+    assert "strike" in output
+    assert "770" in output
 
 
-def test_sem_contrato_na_chain_orienta_e_sai_com_codigo_dois(
-    conexao: psycopg.Connection, monkeypatch: pytest.MonkeyPatch
+def test_no_contract_in_chain_guides_and_exits_with_code_two(
+    connection: psycopg.Connection, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    _semear_taxa(conexao)
-    monkeypatch.setattr(
-        "vol_implicita_spx.cli.yf.Ticker", lambda _: _TickerFalso(False)
-    )
+    _seed_rate(connection)
+    monkeypatch.setattr("spx_implied_vol.cli.yf.Ticker", lambda _: _FakeTicker(False))
 
-    assert main(["curva", "--vencimento", "2026-08-21"]) == 2
+    assert main(["curve", "--expiration", "2026-08-21"]) == 2

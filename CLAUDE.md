@@ -1,34 +1,35 @@
-# Contrato do projeto — Vol Implicita Spx
+# Project contract — SPX Implied Vol
 
-Leia o `CLAUDE.md` global e use este arquivo para o que é específico deste
-repositório.
+Read the global `CLAUDE.md` and use this file for what's specific to this
+repository.
 
-## Resultado do produto
+## Product outcome
 
-- **Problema:** superfície de vol implícita e skew não são triviais de
-  calcular corretamente (opção americana, taxa livre de risco, dividendo).
-  Um repositório que faz isso certo prova leitura de derivativos.
-- **Usuário:** eu, e quem revisa o portfólio avaliando para pesquisa
-  quantitativa.
-- **Saída verificável:** IV, delta e vega por strike/vencimento, calculados
-  por inversão Black-Scholes (Newton-Raphson) e validados contra o
-  `impliedVolatility` que a própria Yahoo/CBOE já publica na chain — a fonte
-  carrega seu próprio gabarito, sem precisar de fixture externa fabricada.
-- **Fonte de dados permitida:** `yfinance`, chain de opções da SPY (proxy
-  líquido do SPX; o índice em si não expõe chain via yfinance). Taxa livre de
-  risco: FRED `DGS3MO` via Postgres do `dados-mercado-publico`
-  (`DADOS_MERCADO_PUBLICO_POSTGRES_DSN` do projeto vizinho — lido pela
-  interface pública `series_vintage`, sem importar código de lá).
-- **Menor corte ponta a ponta:** CLI que recebe um vencimento, busca a chain
-  na SPY, calcula IV+delta+vega por strike e devolve a curva de skew daquele
-  vencimento.
-- **Fora de escopo:** sinal de trading, backtest histórico (`yfinance` só dá
-  a chain do dia — sem histórico, não dá pra reconstruir superfícies
-  passadas ainda), superfície paramétrica (SVI/SABR), grego de segunda ordem.
+- **Problem:** an implied vol surface and skew aren't trivial to compute
+  correctly (American option, risk-free rate, dividend). A repository that
+  gets this right proves derivatives literacy.
+- **User:** me, and whoever reviews the portfolio evaluating for
+  quantitative research.
+- **Verifiable output:** IV, delta and vega per strike/expiration, computed
+  by Black-Scholes inversion (Newton-Raphson) and validated against the
+  `impliedVolatility` Yahoo/CBOE already publish in the chain — the source
+  carries its own ground truth, no fabricated external fixture needed.
+- **Allowed data source:** `yfinance`, SPY's option chain (the liquid SPX
+  proxy; the index itself doesn't expose a chain via yfinance). Risk-free
+  rate: FRED `DGS3MO` via Postgres from `dados-mercado-publico`
+  (`DADOS_MERCADO_PUBLICO_POSTGRES_DSN` from the neighboring project — read
+  through the public `series_vintage` interface, without importing its
+  code).
+- **Smallest end-to-end cut:** a CLI that takes an expiration, fetches the
+  SPY chain, computes IV+delta+vega per strike and returns that
+  expiration's skew curve.
+- **Out of scope:** trading signals, historical backtesting (`yfinance`
+  only gives the day's chain — without history, past surfaces can't be
+  reconstructed yet), a parametric surface (SVI/SABR), second-order greeks.
 
-Não implemente enquanto um `PREENCHER` que altere o design continuar em aberto.
+Do not implement while a `FILL_IN` that changes the design is still open.
 
-## Comandos
+## Commands
 
 ```bash
 uv sync
@@ -36,45 +37,46 @@ uv run python scripts/format.py
 uv run python scripts/check.py
 ```
 
-## Regras locais
+## Local rules
 
-- O pacote é `vol_implicita_spx` e vive em `src/vol_implicita_spx`.
-- Notebook importa de `src/`; código de produção nunca importa notebook.
-- Configuração vem de ambiente por `Settings`.
-- Preserve dado bruto e metadados temporais quando houver ingestão.
-- Atualize este arquivo quando uma decisão estrutural mudar.
+- The package is `spx_implied_vol` and lives in `src/spx_implied_vol`.
+- Notebooks import from `src/`; production code never imports a notebook.
+- Configuration comes from the environment via `Settings`.
+- Preserve raw data and time-vintage metadata whenever there's ingestion.
+- Update this file when a structural decision changes.
 
-## Estilo
+## Style
 
-Código público, lido por gente. A regra é contenção — a lista completa está em
-`AGENTS.md`, seção "Style", e vale igual para mim e para o Codex.
+Public code, read by people. The rule is restraint — the full list is in
+`AGENTS.md`, "Style" section, and applies equally to me and to Codex.
 
-- Comentário explica *por quê*, nunca *o quê*. Se parafraseia a linha abaixo,
-  apague; se a linha precisa de paráfrase, renomeie a variável.
-- Docstring só onde a assinatura não basta (unidade, fuso, efeito colateral,
-  o que levanta). Helper privado de três linhas não leva.
-- Teste afirma comportamento que pode quebrar, não constante. Cobertura é
-  consequência de testar o que importa, nunca meta a inflar.
-- Não capture exceção que não sabe tratar; não abstraia com um único chamador.
+- A comment explains *why*, never *what*. If it paraphrases the line below,
+  delete it; if the line needs paraphrasing, rename the variable instead.
+- Docstrings only where the signature isn't enough (unit, timezone, side
+  effect, what it raises). A three-line private helper doesn't need one.
+- Tests assert behavior that can break, not a constant. Coverage is a
+  consequence of testing what matters, never a target to inflate.
+- Don't catch an exception you don't know how to handle; don't abstract for
+  a single caller.
 
-## Autoria dos commits
+## Commit authorship
 
-Autor e committer são um só: o dono do repositório. Nenhum `Co-Authored-By:`,
-nenhum trailer de sessão, nenhuma menção a Claude, Codex ou ferramenta. Não
-altere `user.name` nem `user.email`.
+Author and committer are one and the same: the repository owner. No
+`Co-Authored-By:`, no session trailer, no mention of Claude, Codex or any
+tool. Don't change `user.name` or `user.email`.
 
-## Estado da sessão
+## Session state
 
-- **Decidido:** primeiro corte entregue — CLI `curva --vencimento` que busca
-  a chain da SPY, inverte Black-Scholes por Newton-Raphson (bisseção como
-  salva-vidas) e devolve IV, delta e vega por strike. Taxa livre de risco lida
-  do Postgres do `dados-mercado-publico` (série `DGS3MO`). Validado contra a
-  IV que a própria Yahoo publica, usando fixture congelada de uma chain real.
-- **Pendente:** ingerir `DGS3MO` no `dados-mercado-publico` de verdade (hoje
-  só a taxa fixa de exemplo do README foi testada; o comando real depende da
-  série existir no Postgres vizinho).
-- **Próximo passo:** decidir se vale um segundo corte de snapshot diário
-  (via Airflow, no padrão do `dados-mercado-publico`) para começar a acumular
-  histórico de superfície — sem isso, backtest de vol continua fora de
-  alcance.
-
+- **Decided:** first cut delivered — CLI `curve --expiration` that fetches
+  the SPY chain, inverts Black-Scholes via Newton-Raphson (bisection as a
+  fallback) and returns IV, delta and vega per strike. Risk-free rate read
+  from the dados-mercado-publico Postgres (`DGS3MO` series). Validated
+  against the IV Yahoo itself publishes, using a frozen fixture from a real
+  chain.
+- **Pending:** ingest `DGS3MO` into `dados-mercado-publico` for real (today
+  only the README's fixed example rate has been exercised; the real command
+  depends on the series existing in the neighboring Postgres).
+- **Next step:** decide whether a second cut for daily snapshots (via
+  Airflow, matching `dados-mercado-publico`'s pattern) is worth it to start
+  accumulating surface history — without it, a vol backtest stays out of
+  reach.
