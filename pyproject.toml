@@ -1,11 +1,11 @@
 [project]
 name = "spx-implied-vol"
 version = "0.1.0"
-description = "Replace with a one-line project description."
+description = "SPY implied vol surface and skew (liquid SPX proxy), computed by numerical Black-Scholes inversion."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
-authors = [{ name = "YOUR_NAME" }]
+authors = [{ name = "Davi Liberato" }]
 dependencies = [
     "pydantic>=2.9",
     "pydantic-settings>=2.5",
