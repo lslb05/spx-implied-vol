@@ -41,7 +41,7 @@ collection uses the chain at call time and the `DGS3MO` rate from Postgres.
   publishes.
 - **Input:** `yfinance`, SPY's option chain. Risk-free rate: FRED `DGS3MO`,
   read from Postgres via
-  [`dados-mercado-publico`](../dados-mercado-publico) through
+  [`public-market-data`](../public-market-data) through
   `DADOS_MERCADO_PUBLICO_POSTGRES_DSN` — the same variable that project
   uses, so one `.env` configures both.
 - **Out of scope:** trading signals, historical backtesting (`yfinance`
@@ -51,7 +51,7 @@ collection uses the chain at call time and the `DGS3MO` rate from Postgres.
 ## Architecture
 
 ```
-yfinance (SPY)                    Postgres (dados-mercado-publico)
+yfinance (SPY)                    Postgres (public-market-data)
     │  chain, spot, dividends          │  DGS3MO via series_vintage
     ▼                                  ▼
 sources/spy.py                   risk_free_rate.py
@@ -90,13 +90,13 @@ measured by the test instead of hidden.
 ## Run locally
 
 Requirements: Python 3.12, `uv`, Docker (for the ephemeral test Postgres),
-and [`dados-mercado-publico`](../dados-mercado-publico) running with the
+and [`public-market-data`](../public-market-data) running with the
 `DGS3MO` series ingested:
 
 ```bash
-# in dados-mercado-publico:
+# in public-market-data:
 docker compose up -d
-uv run python -m dados_mercado_publico ingerir --fonte fred --serie DGS3MO
+uv run python -m public_market_data ingest --source fred --series DGS3MO
 ```
 
 ```bash
@@ -129,7 +129,7 @@ uv run python scripts/format.py
 src/spx_implied_vol/
     black_scholes.py    pricing and numerical inversion — no network dependency
     sources/spy.py       yfinance adapter, testable with a fake ticker
-    risk_free_rate.py    reads the dados-mercado-publico public interface
+    risk_free_rate.py    reads the public-market-data public interface
     skew.py               combines the three into a per-expiration curve
     cli.py                 coordination
 tests/fixtures/           real SPY chain frozen as ground truth

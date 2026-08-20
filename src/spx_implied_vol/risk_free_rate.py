@@ -1,4 +1,4 @@
-"""Risk-free rate read from the dados-mercado-publico Postgres (DGS3MO series).
+"""Risk-free rate read from the public-market-data Postgres (DGS3MO series).
 
 Reads through that project's public `series_vintage` interface — same table,
 without importing its code. This project doesn't write to that table or
@@ -32,6 +32,6 @@ def rate_3_months(connection: psycopg.Connection, *, at: date) -> float:
     if row is None:
         raise RateUnavailable(
             "DGS3MO series not found in series_vintage; run "
-            "'ingest --source fred --series DGS3MO' in dados-mercado-publico"
+            "'ingest --source fred --series DGS3MO' in public-market-data"
         )
     return float(row[0]) / 100

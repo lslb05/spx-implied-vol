@@ -16,7 +16,7 @@ repository.
   carries its own ground truth, no fabricated external fixture needed.
 - **Allowed data source:** `yfinance`, SPY's option chain (the liquid SPX
   proxy; the index itself doesn't expose a chain via yfinance). Risk-free
-  rate: FRED `DGS3MO` via Postgres from `dados-mercado-publico`
+  rate: FRED `DGS3MO` via Postgres from `public-market-data`
   (`DADOS_MERCADO_PUBLICO_POSTGRES_DSN` from the neighboring project — read
   through the public `series_vintage` interface, without importing its
   code).
@@ -70,13 +70,13 @@ tool. Don't change `user.name` or `user.email`.
 - **Decided:** first cut delivered — CLI `curve --expiration` that fetches
   the SPY chain, inverts Black-Scholes via Newton-Raphson (bisection as a
   fallback) and returns IV, delta and vega per strike. Risk-free rate read
-  from the dados-mercado-publico Postgres (`DGS3MO` series). Validated
+  from the public-market-data Postgres (`DGS3MO` series). Validated
   against the IV Yahoo itself publishes, using a frozen fixture from a real
   chain.
-- **Pending:** ingest `DGS3MO` into `dados-mercado-publico` for real (today
+- **Pending:** ingest `DGS3MO` into `public-market-data` for real (today
   only the README's fixed example rate has been exercised; the real command
   depends on the series existing in the neighboring Postgres).
 - **Next step:** decide whether a second cut for daily snapshots (via
-  Airflow, matching `dados-mercado-publico`'s pattern) is worth it to start
+  Airflow, matching `public-market-data`'s pattern) is worth it to start
   accumulating surface history — without it, a vol backtest stays out of
   reach.

@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SPX_IMPLIED_VOL_", extra="ignore")
 
     log_level: str = "INFO"
-    # No prefix on purpose: this is the same variable dados-mercado-publico
+    # No prefix on purpose: this is the same variable public-market-data
     # uses for its own connection — one DSN configures both projects.
     market_data_dsn: str = Field(
         default="postgresql://dados:dados@localhost:5433/dados_mercado_publico",

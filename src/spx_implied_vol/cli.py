@@ -36,7 +36,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     except psycopg.OperationalError as error:
         print(
-            f"could not connect to dados-mercado-publico's Postgres: {error}",
+            f"could not connect to public-market-data's Postgres: {error}",
             file=sys.stderr,
         )
         return 2
